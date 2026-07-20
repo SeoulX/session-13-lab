@@ -175,6 +175,12 @@ h1 {
   header.top { flex-direction: column; align-items: flex-start; }
   h1 { font-size: 26px; }
 }
+
+.qpts { display: inline-block; padding: 1px 8px; margin-left: 8px;
+        border-radius: 999px; font-size: 9px; font-weight: 700; letter-spacing: 0.08em; }
+.qpts.p1 { background:#dcfce7; color:#166534; border:1px solid #166534; }
+.qpts.p3 { background:#fef3c7; color:#92400e; border:1px solid #92400e; }
+.qpts.p5 { background:#fecaca; color:#991b1b; border:1px solid #991b1b; }
 </style>
 </head>
 <body>
@@ -198,7 +204,7 @@ h1 {
 <div class="section-label">Module 01–02 · Primitives</div>
 
 <div class="q" data-answer="b">
-  <div class="num">Q1</div>
+  <div class="num">Q1</div><span class="qpts p1"> · 1 pt</span>
   <div class="prompt">Which flag makes <code>claude</code> run non-interactively, exiting after one prompt?</div>
   <div class="choices">
     <label class="choice"><input type="radio" name="q1" value="a"><span><code>--headless</code></span></label>
@@ -212,7 +218,7 @@ h1 {
 </div>
 
 <div class="q short" data-answer="0">
-  <div class="num">Q2</div>
+  <div class="num">Q2</div><span class="qpts p1"> · 1 pt</span>
   <div class="prompt">What exit code means the CLI call ran successfully?</div>
   <input type="text" placeholder="Your answer" />
   <div class="explanation">
@@ -221,7 +227,7 @@ h1 {
 </div>
 
 <div class="q short" data-answer="json, stream-json">
-  <div class="num">Q3</div>
+  <div class="num">Q3</div><span class="qpts p3"> · 3 pts</span>
   <div class="prompt">Which two output formats does <code>--output-format</code> accept for programmatic use?</div>
   <input type="text" placeholder="Two formats, comma-separated" />
   <div class="explanation">
@@ -230,7 +236,7 @@ h1 {
 </div>
 
 <div class="q" data-answer="b">
-  <div class="num">Q4</div>
+  <div class="num">Q4</div><span class="qpts p1"> · 1 pt</span>
   <div class="prompt">In <code>--output-format json</code>, which field carries the answer text?</div>
   <div class="choices">
     <label class="choice"><input type="radio" name="q4" value="a"><span><code>.output</code></span></label>
@@ -244,7 +250,7 @@ h1 {
 </div>
 
 <div class="q short" data-answer="--verbose">
-  <div class="num">Q5</div>
+  <div class="num">Q5</div><span class="qpts p1"> · 1 pt</span>
   <div class="prompt">Which extra flag does <code>--output-format stream-json</code> require in CLI 2.1+?</div>
   <input type="text" placeholder="Your answer" />
   <div class="explanation">
@@ -253,7 +259,7 @@ h1 {
 </div>
 
 <div class="q short" data-answer="~/.claude, CLAUDE.md">
-  <div class="num">Q6</div>
+  <div class="num">Q6</div><span class="qpts p5"> · 5 pts</span>
   <div class="prompt">Name two things that DO carry into a <code>claude -p</code> call from your interactive environment.</div>
   <input type="text" placeholder="Two items, comma-separated" />
   <div class="explanation">
@@ -264,7 +270,7 @@ h1 {
 <div class="section-label">Module 03 · Hooks</div>
 
 <div class="q short" data-answer=".git/hooks/pre-commit">
-  <div class="num">Q7</div>
+  <div class="num">Q7</div><span class="qpts p1"> · 1 pt</span>
   <div class="prompt">Which file must a git pre-commit hook live at?</div>
   <input type="text" placeholder="Exact path" />
   <div class="explanation">
@@ -275,7 +281,7 @@ h1 {
 <div class="section-label">Module 04 · Parallel CI</div>
 
 <div class="q" data-answer="b">
-  <div class="num">Q10</div>
+  <div class="num">Q10</div><span class="qpts p1"> · 1 pt</span>
   <div class="prompt">In GitHub Actions, what makes two <code>jobs:</code> run in parallel?</div>
   <div class="choices">
     <label class="choice"><input type="radio" name="q10" value="a"><span><code>parallel: true</code></span></label>
@@ -289,7 +295,7 @@ h1 {
 </div>
 
 <div class="q short" data-answer="20">
-  <div class="num">Q11</div>
+  <div class="num">Q11</div><span class="qpts p3"> · 3 pts</span>
   <div class="prompt">If test takes 15s, lint takes 8s, claude-review takes 20s, and all three run in parallel — what is the total wall clock (seconds)?</div>
   <input type="text" placeholder="Seconds" />
   <div class="explanation">
@@ -298,7 +304,7 @@ h1 {
 </div>
 
 <div class="q short" data-answer="actions/github-script">
-  <div class="num">Q12</div>
+  <div class="num">Q12</div><span class="qpts p3"> · 3 pts</span>
   <div class="prompt">Which action posts Claude's findings as a PR comment in <code>04-parallel-ci.yml</code>?</div>
   <input type="text" placeholder="Action name (org/name)" />
   <div class="explanation">
@@ -307,7 +313,7 @@ h1 {
 </div>
 
 <div class="q short" data-answer="soft-fail during rollout">
-  <div class="num">Q13</div>
+  <div class="num">Q13</div><span class="qpts p1"> · 1 pt</span>
   <div class="prompt"><code>continue-on-error: true</code> is used during rollout of the Claude review job. Why?</div>
   <input type="text" placeholder="One phrase" />
   <div class="explanation">
@@ -318,7 +324,7 @@ h1 {
 <div class="section-label">Module 05 · Monitoring</div>
 
 <div class="q short" data-answer="total_cost_usd">
-  <div class="num">Q14</div>
+  <div class="num">Q14</div><span class="qpts p3"> · 3 pts</span>
   <div class="prompt">What is the correct JSON field name for cost in a stream-json <code>result</code> event?</div>
   <input type="text" placeholder="Exact field name" />
   <div class="explanation">
@@ -327,7 +333,7 @@ h1 {
 </div>
 
 <div class="q" data-answer="b">
-  <div class="num">Q15</div>
+  <div class="num">Q15</div><span class="qpts p5"> · 5 pts</span>
   <div class="prompt">Where do you find <code>tool_use</code> events inside a stream-json line?</div>
   <div class="choices">
     <label class="choice"><input type="radio" name="q15" value="a"><span>Top-level <code>.type=="tool_use"</code></span></label>
@@ -343,7 +349,7 @@ h1 {
 <div class="section-label">Pulse · applied arc</div>
 
 <div class="q short" data-answer="preserves history">
-  <div class="num">Q19</div>
+  <div class="num">Q19</div><span class="qpts p3"> · 3 pts</span>
   <div class="prompt">Pulse's tag lifecycle now cuts a NEW tag on every submit instead of destructively re-cutting <code>v0.0.0</code>. Name one reason this matters.</div>
   <input type="text" placeholder="One sentence" />
   <div class="explanation">
@@ -352,7 +358,7 @@ h1 {
 </div>
 
 <div class="q short" data-answer="exact tag match">
-  <div class="num">Q20</div>
+  <div class="num">Q20</div><span class="qpts p5"> · 5 pts</span>
   <div class="prompt">In the 3-tier spec lookup (<code>/api/deployments/spec/{slug}?tag=X</code>), which tier fires FIRST?</div>
   <input type="text" placeholder="Your answer" />
   <div class="explanation">
