@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2  # need base to diff against
+          fetch-depth: 0  # full history so origin/<base_ref> is resolvable
 
       - name: Install Claude
         run: |
