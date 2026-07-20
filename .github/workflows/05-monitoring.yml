@@ -1,0 +1,57 @@
+# Module 05 — scheduled unattended audit + cost roll-up.
+# Runs nightly, publishes findings + cost as workflow summary artifacts.
+
+name: 05 · nightly Claude audit + cost
+
+on:
+  schedule:
+    - cron: '17 3 * * *'    # 03:17 UTC daily
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+
+      - name: Install Claude
+        run: |
+          sudo apt-get install -y -qq jq
+          npm install -g @anthropic-ai/claude-code
+
+      - name: Run audit (stream-json)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p --output-format stream-json \
+            "Audit every module in this repo — for each, verify the scripts still work and README matches. JSON findings per module." \
+            > audit.log
+
+      - name: Cost roll-up
+        run: |
+          cost=$(jq -r 'select(.type=="result") | .totalCost' audit.log \
+                 | awk '{s+=$1} END {printf "%.4f", s}')
+          echo "## Audit cost" >> "$GITHUB_STEP_SUMMARY"
+          echo "**\$$cost**" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "## Tool calls" >> "$GITHUB_STEP_SUMMARY"
+          jq -r 'select(.type=="tool_use") | "- `\(.name)` \(.input.file_path // "")"' audit.log \
+            >> "$GITHUB_STEP_SUMMARY" || true
+
+      - name: Upload audit log
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-log
+          path: audit.log
+          retention-days: 30
+
+      - name: Notify Slack on findings
+        if: always()
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        run: |
+          [ -z "$SLACK_WEBHOOK" ] && exit 0
+          curl -sS -X POST -H 'Content-Type: application/json' \
+            -d "{\"text\":\"Nightly Claude audit ran. Log: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
+            "$SLACK_WEBHOOK"

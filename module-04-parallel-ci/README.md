@@ -1,19 +1,25 @@
-# Module 04 — Parallel CI stages
+# Module 04 — Parallel CI (GitHub Actions)
 
 ## Goal
-Add a Claude review stage to Jenkins that runs parallel to Test + Vuln Scan. Zero wall-clock cost when Test is faster.
+Add a Claude review job that runs parallel to test + lint on every PR.
 
 ## Files
-- `Jenkinsfile.snippet` — paste this `stage('Analysis')` block into your `Jenkinsfile.default`.
-- `claude-review.sh` — the shell that Jenkins invokes. Runs `claude -p` w/ JSON output.
+- `.github/workflows/04-parallel-ci.yml` (at repo root) — three jobs, no `needs:` = they run concurrently
+- `claude-review.sh` — same shell the workflow invokes (works locally too)
 
-## Wire it
+## Wire it (one-time)
 
-1. Copy the snippet into `Jenkinsfile.default` between `Test` and `Build & Push Staging`.
-2. Push a new tag to your repo.
-3. Watch Pulse tracker → the Claude row shows up parallel to Test.
-4. Screenshot the tracker's right panel + drop in `#training`.
+1. In your repo settings → Secrets → Actions, add `ANTHROPIC_API_KEY`.
+2. Push the workflow file. Open a PR.
+3. GitHub Actions tab → see three jobs run in parallel.
+4. Claude auto-comments findings on the PR.
 
 ## Design notes
-- Soft-fail during rollout (`|| true`) until false-positive rate is understood. Flip to hard-fail later.
-- Result JSON archived by Jenkins (`archiveArtifacts`) so you can grep across builds.
+- Total wall-clock = **max(job duration)**, not sum. Adding Claude to a suite where lint takes 30 s costs nothing when Claude takes 45 s (both under 1 min).
+- `continue-on-error: true` = soft-fail during rollout week. Flip off once false-positive rate is understood.
+- Findings uploaded as artifact (`actions/upload-artifact`) so you can grep across historical runs.
+- PR comment via `actions/github-script` — devs see review inline w/ their code.
+
+## Why GHA over Jenkins for this module
+
+GHA is the ambient CI most devs know. Jenkins is our internal deploy platform (Pulse pipeline) — covered in Module 06 as an applied case study, not the primitive.

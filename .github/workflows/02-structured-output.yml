@@ -1,0 +1,41 @@
+# Module 02 — pipe Claude's JSON envelope into jq + upload as artifact.
+
+name: 02 · structured output
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths: ['module-02-structured/**']
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Claude
+        run: |
+          sudo apt-get install -y -qq jq
+          npm install -g @anthropic-ai/claude-code
+
+      - name: Run + parse envelope
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p --output-format json \
+            "list top-level dirs in this repo, one per line" \
+            | tee claude-envelope.json \
+            | jq -r '.result' > result.txt
+
+      - name: Cost accounting
+        run: |
+          cost=$(jq -r '.totalCost // 0' claude-envelope.json)
+          echo "cost=\$$cost" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload envelope
+        uses: actions/upload-artifact@v4
+        with:
+          name: claude-envelope
+          path: |
+            claude-envelope.json
+            result.txt

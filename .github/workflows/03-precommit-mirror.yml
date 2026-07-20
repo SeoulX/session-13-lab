@@ -1,0 +1,46 @@
+# Module 03 mirror — same rules the pre-commit hook runs LOCALLY, replayed
+# in CI so the gate exists even when devs `git commit --no-verify`.
+# Fires on every PR.
+
+name: 03 · pre-commit mirror (leak + pulse-align)
+
+on:
+  pull_request:
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # need base to diff against
+
+      - name: Install Claude
+        run: |
+          sudo apt-get install -y -qq jq
+          npm install -g @anthropic-ai/claude-code
+
+      - name: Leak check (hard-fail)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          diff=$(git diff origin/${{ github.base_ref }}..HEAD)
+          [ -z "$diff" ] && { echo "empty diff"; exit 0; }
+          leak=$(echo "$diff" | claude -p --output-format json \
+            "Any GitHub/Slack/LLM tokens or private keys in this diff? Reply {\"leak\": true|false}")
+          echo "$leak" > leak.json
+          if echo "$leak" | jq -e '.result | fromjson | .leak' >/dev/null; then
+            echo "❌ Suspected secret in diff." >&2
+            exit 1
+          fi
+
+      - name: Compliance check (warn-only during rollout)
+        if: contains(github.event.pull_request.changed_files, 'devops/')
+        continue-on-error: true
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p --output-format json \
+            "Run pulse-align compliance for this repo. Reply {\"compliant\": true|false, \"gaps\": []}" \
+            > compliance.json
+          jq . compliance.json

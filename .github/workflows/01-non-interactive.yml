@@ -1,0 +1,26 @@
+# Module 01 demo — fire claude -p from a GitHub Actions job.
+# Trigger: manual (workflow_dispatch) so instructors control timing.
+
+name: 01 · non-interactive claude
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths: ['module-01-non-interactive/**']
+
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Node + Claude Code CLI
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq jq
+          npm install -g @anthropic-ai/claude-code
+
+      - name: Non-interactive Claude
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p "Reply with exactly the word READY if this workflow ran non-interactively."
