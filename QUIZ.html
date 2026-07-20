@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Session 13 · 20-question quiz</title>
+<title>Session 13 · 15-question quiz</title>
 <style>
 :root {
   --bg: #f5f0e6;
@@ -183,7 +183,7 @@ h1 {
 <header class="top">
   <div>
     <div class="brand">Seven-Gen · <strong>Session 13</strong> · Assessment</div>
-    <h1>20-question quiz</h1>
+    <h1>15-question quiz</h1>
   </div>
   <button class="theme-toggle" id="themeToggle" type="button">☾ Theme</button>
 </header>
@@ -192,7 +192,7 @@ h1 {
   <button id="grade" type="button">Grade quiz</button>
   <button class="ghost" id="showAll" type="button">Show all explanations</button>
   <button class="ghost" id="reset" type="button">Reset</button>
-  <div class="score" id="score">0 / 20 answered</div>
+  <div class="score" id="score">0 / 15 answered</div>
 </div>
 
 <div class="section-label">Module 01–02 · Primitives</div>
@@ -216,7 +216,7 @@ h1 {
   <div class="prompt">What exit code means the CLI call ran successfully?</div>
   <input type="text" placeholder="Your answer" />
   <div class="explanation">
-    POSIX convention. Any non-zero code = failure. Lets <code>if claude -p "..."; then ...</code> work in shell scripts and CI stages.
+    POSIX convention. Any non-zero code = failure. Lets <code>if claude -p "..."; then ...</code> work in shell scripts and CI stages. <br><em>💀 Moral: kung galit ang shell, may exit code na 1. Kung tahimik, 0. Simple.</em>
   </div>
 </div>
 
@@ -272,24 +272,6 @@ h1 {
   </div>
 </div>
 
-<div class="q short" data-answer="--no-verify">
-  <div class="num">Q8</div>
-  <div class="prompt">What CLI flag lets a developer bypass a failing pre-commit hook?</div>
-  <input type="text" placeholder="Your answer" />
-  <div class="explanation">
-    Also <code>-n</code>. Bypasses pre-commit + commit-msg hooks. Reason M03's GHA mirror exists — CI runs the same check server-side.
-  </div>
-</div>
-
-<div class="q short" data-answer="silently skipped">
-  <div class="num">Q9</div>
-  <div class="prompt">If the pre-commit hook is <code>chmod 644</code> instead of <code>755</code>, what happens on commit?</div>
-  <input type="text" placeholder="Your answer" />
-  <div class="explanation">
-    Git ignores non-executable hook files without warning. Classic footgun — leak-check appears "installed" but never runs. Always verify with <code>ls -la .git/hooks/pre-commit</code>.
-  </div>
-</div>
-
 <div class="section-label">Module 04 · Parallel CI</div>
 
 <div class="q" data-answer="b">
@@ -311,7 +293,7 @@ h1 {
   <div class="prompt">If test takes 15s, lint takes 8s, claude-review takes 20s, and all three run in parallel — what is the total wall clock (seconds)?</div>
   <input type="text" placeholder="Seconds" />
   <div class="explanation">
-    Wall clock = max(15, 8, 20) = 20. Sum would be 43. Claude joins CI at ZERO added minutes if your slowest existing job is already slower than Claude.
+    Wall clock = max(15, 8, 20) = 20. Sum would be 43. Claude joins CI at ZERO added minutes if your slowest existing job is already slower than Claude. <br><em>🏃‍♂️🏃‍♀️🏃 "Bakit nga ba tayo naghintay sa isa-isa?" — parallel gang rise.</em>
   </div>
 </div>
 
@@ -340,7 +322,7 @@ h1 {
   <div class="prompt">What is the correct JSON field name for cost in a stream-json <code>result</code> event?</div>
   <input type="text" placeholder="Exact field name" />
   <div class="explanation">
-    Common bug: code written as <code>.totalCost</code> (camelCase) reads null → sums to $0.0000. Real field is snake_case.
+    Common bug: code written as <code>.totalCost</code> (camelCase) reads null → sums to $0.0000. Real field is snake_case. <br><em>💸 "Bakit $0 lahat ng runs?" — spoiler: tinatawagan mo yung field na wala.</em>
   </div>
 </div>
 
@@ -358,35 +340,6 @@ h1 {
   </div>
 </div>
 
-<div class="section-label">GHA · Live demo</div>
-
-<div class="q short" data-answer="CLAUDE_CODE_OAUTH_TOKEN">
-  <div class="num">Q16</div>
-  <div class="prompt">Which repo secret authenticates the Anthropic GitHub App's workflows?</div>
-  <input type="text" placeholder="Exact secret name" />
-  <div class="explanation">
-    Created by <code>/install-github-app</code> in Claude Code CLI. Encrypts an OAuth token tied to installer's Anthropic account (Pro sub works). Usage counts against installer's plan — no API-key billing on the repo.
-  </div>
-</div>
-
-<div class="q short" data-answer="default branch">
-  <div class="num">Q17</div>
-  <div class="prompt">Why does the <code>@claude</code> mention workflow run from the default branch even when commented on a PR from another branch?</div>
-  <input type="text" placeholder="One phrase" />
-  <div class="explanation">
-    <code>issue_comment</code> events always trigger workflows from the repo's default-branch state. Design decision — prevents unmerged PRs from executing arbitrary workflow code via a comment. Consequence: <code>claude.yml</code> MUST live on <code>main</code>.
-  </div>
-</div>
-
-<div class="q short" data-answer="0">
-  <div class="num">Q18</div>
-  <div class="prompt"><code>git diff origin/main..HEAD</code> fails with "unknown revision" when checkout uses <code>fetch-depth: 2</code>. What value fixes it?</div>
-  <input type="text" placeholder="Number" />
-  <div class="explanation">
-    <code>fetch-depth: 2</code> grabs commits but does NOT populate <code>refs/remotes/origin/&lt;base_ref&gt;</code>. <code>fetch-depth: 0</code> = full history, base ref present.
-  </div>
-</div>
-
 <div class="section-label">Pulse · applied arc</div>
 
 <div class="q short" data-answer="preserves history">
@@ -394,7 +347,7 @@ h1 {
   <div class="prompt">Pulse's tag lifecycle now cuts a NEW tag on every submit instead of destructively re-cutting <code>v0.0.0</code>. Name one reason this matters.</div>
   <input type="text" placeholder="One sentence" />
   <div class="explanation">
-    Preserves Bitbucket tag history + Jenkins build lineage. Old behavior deleted <code>v0.0.0</code> and re-pushed → history gone, Jenkins build numbers collided. New behavior: every attempt keeps its own tracker URL forever.
+    Preserves Bitbucket tag history + Jenkins build lineage. Old behavior deleted <code>v0.0.0</code> and re-pushed → history gone, Jenkins build numbers collided. New behavior: every attempt keeps its own tracker URL forever. <br><em>📼 Marites: "Sino nag-delete ng tag ko?" — before: Pulse. After: walang gumagalaw.</em>
   </div>
 </div>
 
@@ -435,7 +388,7 @@ function getValue(q) {
 
 function updateAnswered() {
   var n = qs.filter(function (q) { return getValue(q).length > 0; }).length;
-  score.innerHTML = '<strong>' + n + '</strong> / 20 answered';
+  score.innerHTML = '<strong>' + n + '</strong> / 15 answered';
 }
 
 document.getElementById('grade').addEventListener('click', function () {
@@ -462,7 +415,7 @@ document.getElementById('grade').addEventListener('click', function () {
     if (ok) right++;
     q.querySelector('.explanation').classList.add('show');
   });
-  score.innerHTML = '<strong>' + right + '</strong> / 20 correct';
+  score.innerHTML = '<strong>' + right + '</strong> / 15 correct';
 });
 
 document.getElementById('showAll').addEventListener('click', function () {
