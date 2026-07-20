@@ -6,6 +6,14 @@ Companion repo for the 75-min Session 13 training. One directory per module. Eac
 - runnable scripts you paste into a shell / hook / Jenkinsfile
 - a `check.sh` self-test where applicable
 
+## Presenter start here
+
+**`SESSION_DEMO.md`** — full presenter runbook. Zero-cost, terminal-only demo path using local Claude Code CLI (Pro subscription). No API key required for the live session.
+
+## GitHub Actions workflows
+
+`.github/workflows/*.yml` are **reference artifacts** — the canonical shape for automated CI. They require an Anthropic API key (Pro sub doesn't cover programmatic API — see `SESSION_DEMO.md` for the tradeoff). Devs activate them once the org sets `ANTHROPIC_API_KEY` in repo secrets.
+
 ## Prerequisites
 
 - Claude Code CLI installed + logged in (`claude --version` works)
