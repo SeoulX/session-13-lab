@@ -1,25 +1,40 @@
-# Module 04 — Parallel CI (GitHub Actions)
+# Module 04 — Parallel CI (Claude alongside test + lint)
 
 ## Goal
-Add a Claude review job that runs parallel to test + lint on every PR.
+Add a Claude review job that runs in parallel with your existing test + lint pipeline. Zero wall-clock cost when Claude finishes before the slowest existing job.
+
+## Two paths, same primitive
+
+| Where | Syntax | How it parallelizes |
+|---|---|---|
+| **Local shell (demo today)** | bash `&` background jobs + `wait` | Kernel schedules 3 processes concurrently |
+| **GitHub Actions (canonical)** | separate `jobs:` without `needs:` | GHA scheduler dispatches 3 runners concurrently |
+| **Jenkins (Pulse pipeline)** | `parallel { }` block | Jenkins agent forks 3 pipeline branches |
+
+Same idea, different venue.
 
 ## Files
-- `.github/workflows/04-parallel-ci.yml` (at repo root) — three jobs, no `needs:` = they run concurrently
-- `claude-review.sh` — same shell the workflow invokes (works locally too)
+- `parallel-local.sh` — **runs live** in the session. Fires test + lint + claude-review in parallel via bash `&`. Total wall-clock = max(job).
+- `demo-buggy-diff.sh` — seeds a `buggy.py` w/ real defects so Claude has something to actually flag.
+- `.github/workflows/04-parallel-ci.yml` (at repo root) — reference workflow. Same behavior in GHA; needs `ANTHROPIC_API_KEY`.
+- `claude-review.sh` — the review-only step (called by both local + Jenkins snippet).
+- `Jenkinsfile.snippet` — Jenkins version for reference; drop into a `Jenkinsfile.default` if using Jenkins CI.
 
-## Wire it (one-time)
+## Live demo (60 seconds)
 
-1. In your repo settings → Secrets → Actions, add `ANTHROPIC_API_KEY`.
-2. Push the workflow file. Open a PR.
-3. GitHub Actions tab → see three jobs run in parallel.
-4. Claude auto-comments findings on the PR.
+```bash
+cd module-04-parallel-ci
+./demo-buggy-diff.sh    # writes buggy.py + stages it
+./parallel-local.sh     # runs 3 checks concurrently
+
+# Expected: total wall-clock ~= claude call time (~5s), NOT sum (10s+).
+# Claude reports findings on buggy.py.
+```
+
+Point at the wall-clock number vs sum-of-individual — that's the parallelism win.
 
 ## Design notes
-- Total wall-clock = **max(job duration)**, not sum. Adding Claude to a suite where lint takes 30 s costs nothing when Claude takes 45 s (both under 1 min).
-- `continue-on-error: true` = soft-fail during rollout week. Flip off once false-positive rate is understood.
-- Findings uploaded as artifact (`actions/upload-artifact`) so you can grep across historical runs.
-- PR comment via `actions/github-script` — devs see review inline w/ their code.
-
-## Why GHA over Jenkins for this module
-
-GHA is the ambient CI most devs know. Jenkins is our internal deploy platform (Pulse pipeline) — covered in Module 06 as an applied case study, not the primitive.
+- `sleep 3` + `sleep 2` are stand-ins for real test / lint. Wire your actual commands in `parallel-local.sh` job blocks 1 + 2.
+- Claude call uses `--append-system-prompt` to enforce JSON-only reply. Prose-mixed responses would break `jq`.
+- GHA workflow is functionally identical + auto-comments findings on the PR via `actions/github-script`. Activate when your org sets `ANTHROPIC_API_KEY`.
+- Same trick works inside Pulse's `Jenkinsfile.default` — Module 06 walks the Jenkins case study.
