@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Session 13 · Presenter one-liners</title>
+  <style>
+    :root {
+      --bg: #f5f0e6;
+      --card: #ffffff;
+      --border: #e5dcc9;
+      --ink: #1a1613;
+      --muted: #7a6f5c;
+      --accent: #e8871e;
+      --accent-dim: #f0a830;
+      --logbg: #1a1613;
+      --logtext: #f5a97f;
+      --pill-bg: #fff4e0;
+    }
+    :root[data-theme="dark"] {
+      --bg: #0d1a20;
+      --card: #14232b;
+      --border: #22343d;
+      --ink: #e6ecef;
+      --muted: #7d95a1;
+      --accent: #5ab4c5;
+      --accent-dim: #2a7f9e;
+      --logbg: #06111a;
+      --logtext: #5ab4c5;
+      --pill-bg: #1a2f3a;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme]) {
+        --bg: #0d1a20; --card: #14232b; --border: #22343d;
+        --ink: #e6ecef; --muted: #7d95a1;
+        --accent: #5ab4c5; --accent-dim: #2a7f9e;
+        --logbg: #06111a; --logtext: #5ab4c5; --pill-bg: #1a2f3a;
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      padding: 48px 20px 96px;
+    }
+    .wrap {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    header.top {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand {
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .brand strong { color: var(--accent); font-weight: 700; }
+    h1 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 34px;
+      line-height: 1.15;
+      margin: 8px 0 0;
+      color: var(--ink);
+    }
+    .theme-toggle {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--ink);
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      cursor: pointer;
+    }
+    .lede {
+      font-size: 15px;
+      color: var(--muted);
+      margin: 0 0 32px;
+      max-width: 720px;
+    }
+
+    /* Framing block */
+    .frame {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 24px 28px;
+      margin-bottom: 40px;
+    }
+    .frame h2 {
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+      margin: 0 0 14px;
+    }
+    .frame pre {
+      background: var(--logbg);
+      color: var(--logtext);
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      padding: 16px 20px;
+      overflow-x: auto;
+      margin: 0 0 16px;
+    }
+    .frame .say {
+      font-size: 14px;
+      color: var(--ink);
+    }
+    .frame .say strong {
+      color: var(--accent);
+    }
+
+    /* Module */
+    section.module {
+      background: var(--card);
+      border: 1px solid var(--border);
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+    section.module > header {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 28px;
+      background: linear-gradient(180deg, transparent, color-mix(in oklab, var(--accent) 4%, transparent));
+    }
+    .num {
+      display: inline-block;
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 3px 8px;
+      background: var(--pill-bg);
+      border: 1px solid var(--border);
+    }
+    section.module h3 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 22px;
+      line-height: 1.25;
+      margin: 12px 0 6px;
+      color: var(--ink);
+    }
+    section.module .syllabus {
+      font-size: 12px;
+      color: var(--muted);
+      font-style: italic;
+      margin: 0;
+    }
+    section.module .content {
+      padding: 20px 28px 24px;
+    }
+    section.module h4 {
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+      margin: 20px 0 8px;
+    }
+    section.module h4:first-child { margin-top: 0; }
+    section.module pre {
+      background: var(--logbg);
+      color: var(--logtext);
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 12.5px;
+      line-height: 1.55;
+      padding: 14px 18px;
+      overflow-x: auto;
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    section.module p.audience {
+      font-size: 13px;
+      color: var(--ink);
+      margin: 8px 0 0;
+    }
+    section.module p.audience code {
+      background: var(--pill-bg);
+      padding: 2px 6px;
+      color: var(--accent);
+      border: 1px solid var(--border);
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 12px;
+    }
+    section.module ul.audience {
+      margin: 8px 0 0;
+      padding-left: 20px;
+      font-size: 13px;
+      color: var(--ink);
+    }
+    section.module ul.audience code {
+      background: var(--pill-bg);
+      padding: 1px 5px;
+      color: var(--accent);
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 12px;
+      border: 1px solid var(--border);
+    }
+    section.module blockquote.pitch {
+      margin: 12px 0 0;
+      padding: 14px 18px;
+      background: var(--bg);
+      border-left: 3px solid var(--accent);
+      font-size: 14px;
+      color: var(--ink);
+      font-style: italic;
+    }
+    section.module blockquote.pitch::before {
+      content: "PITCH";
+      display: block;
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 10px;
+      font-style: normal;
+      letter-spacing: 0.16em;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    /* Recovery table */
+    .recovery {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 24px 28px;
+      margin-top: 40px;
+    }
+    .recovery h2 {
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+      margin: 0 0 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th {
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    td:first-child { color: var(--accent); font-weight: 600; width: 40%; }
+
+    /* Preflight */
+    .preflight {
+      margin-top: 28px;
+      padding: 20px 28px;
+      background: var(--card);
+      border: 1px solid var(--border);
+    }
+    .preflight h2 {
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+      margin: 0 0 12px;
+    }
+    .preflight pre {
+      background: var(--logbg);
+      color: var(--logtext);
+      padding: 12px 16px;
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 12.5px;
+      margin: 0;
+    }
+
+    /* Print */
+    @media print {
+      body { background: #fff; color: #000; padding: 0; }
+      .theme-toggle { display: none; }
+      section.module, .frame, .recovery, .preflight {
+        page-break-inside: avoid;
+        border: 1px solid #ccc;
+        box-shadow: none;
+      }
+      pre { border: 1px solid #ccc; }
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      body { padding: 24px 12px 60px; }
+      header.top { flex-direction: column; align-items: flex-start; }
+      h1 { font-size: 26px; }
+      section.module > header, section.module .content,
+      .frame, .recovery, .preflight { padding-left: 18px; padding-right: 18px; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div>
+    <div class="brand">Seven-Gen · <strong>Session 13</strong> · Presenter kit</div>
+    <h1>One-liner Playbook</h1>
+  </div>
+  <button class="theme-toggle" id="themeToggle" type="button">☾ Theme</button>
+</header>
+
+<p class="lede">
+  Per module — syllabus goal, commands to type, what audience sees, how to connect to CI/CD. Paste verbatim in front of the room. Runs against local Claude Code CLI (Pro sub), no API key.
+</p>
+
+<div class="frame">
+  <h2>Whiteboard the framing first</h2>
+<pre>    laptop  →  commit  →  push  →  CI build  →  deploy
+       ↑         ↑          ↑         ↑           ↑
+      M01       M03        M02      M04         M05
+     M02</pre>
+  <p class="say">
+    <strong>Say:</strong> CI/CD pipelines are shells firing tools in sequence. Today we make Claude one of those tools. Five modules = five places to plant it. Local dev, commit gate, push, build stage, post-hoc observability. Same primitive everywhere: <code>claude -p</code>.
+  </p>
+</div>
+
+<!-- Module 1 -->
+<section class="module">
+  <header>
+    <span class="num">01 / 05</span>
+    <h3><code>claude -p</code> for non-interactive queries</h3>
+    <p class="syllabus"><code>claude -p "prompt"</code> for non-interactive one-off queries inside shell scripts and pipeline stages.</p>
+  </header>
+  <div class="content">
+    <h4>Type</h4>
+<pre>claude -p "reply READY"</pre>
+    <h4>Audience sees</h4>
+    <p class="audience"><code>READY</code></p>
+    <blockquote class="pitch">
+      Every CI stage is a shell command. If Claude can be a shell command, Claude can be a CI stage. That is the whole hook — the rest of today is what you <em>do</em> with that.
+    </blockquote>
+  </div>
+</section>
+
+<!-- Module 2 -->
+<section class="module">
+  <header>
+    <span class="num">02 / 05</span>
+    <h3>Structured output</h3>
+    <p class="syllabus"><code>--output-format json</code> and <code>stream-json</code> for programmatic parsing — pipe Claude's structured output into downstream scripts.</p>
+  </header>
+  <div class="content">
+    <h4>Type</h4>
+<pre>claude -p "list 3 python files here" --output-format json</pre>
+    <h4>Then prove it is parseable</h4>
+<pre>claude -p "list 3 python files here" --output-format json | jq -r '.result'</pre>
+    <h4>Audience sees</h4>
+    <p class="audience">JSON blob → clean text-only answer.</p>
+    <blockquote class="pitch">
+      CI does not read English — it reads exit codes and JSON. This flag turns Claude into a service other tools can consume: PR comments, Slack notifications, dashboards, anything.
+    </blockquote>
+  </div>
+</section>
+
+<!-- Module 3 -->
+<section class="module">
+  <header>
+    <span class="num">03 / 05</span>
+    <h3>Pre-commit hooks</h3>
+    <p class="syllabus">Using Claude in pre-commit hooks: automated security scan, lint fix suggestion, and test stub generation on every commit.</p>
+  </header>
+  <div class="content">
+    <h4>Type (fresh sandbox)</h4>
+<pre>mkdir /tmp/hook &amp;&amp; cd /tmp/hook &amp;&amp; git init</pre>
+    <h4>Install Claude-powered hook</h4>
+<pre>cat &gt; .git/hooks/pre-commit &lt;&lt;'EOF'
+#!/bin/bash
+git diff --cached | claude -p "reply BLOCK if you see any api token, else PASS" | grep -q PASS
+EOF
+chmod +x .git/hooks/pre-commit</pre>
+    <h4>Trigger it</h4>
+<pre>echo "token=ghp_ABCDEFGHIJKLMNOPQRSTUVWXYZ012345" &gt; secret.txt
+git add secret.txt
+git commit -m "test"</pre>
+    <h4>Audience sees</h4>
+    <p class="audience">Commit blocked. Token never reaches remote.</p>
+    <blockquote class="pitch">
+      This is CI shifted <strong>left</strong> — check runs on your laptop before the code leaves your machine. Same check we could run in GitHub Actions later, but caught 5 minutes earlier. Free.
+    </blockquote>
+  </div>
+</section>
+
+<!-- Module 4 -->
+<section class="module">
+  <header>
+    <span class="num">04 / 05</span>
+    <h3>Parallel CI stages</h3>
+    <p class="syllabus">Running parallel Claude sessions as separate CI stages — frontend build and backend test simultaneously in GitHub Actions.</p>
+  </header>
+  <div class="content">
+    <h4>Type — one line, three concurrent processes</h4>
+<pre>time { (sleep 3 &amp;&amp; echo "test done") &amp; (sleep 2 &amp;&amp; echo "lint done") &amp; (claude -p "one bug in: def div(a,b): return a/b" &amp;&amp; echo "claude done") &amp; wait; }</pre>
+    <h4>Audience sees</h4>
+    <ul class="audience">
+      <li>Three "done" lines land at different times</li>
+      <li><code>real 5.something</code> at the end (not 10)</li>
+    </ul>
+    <blockquote class="pitch">
+      Test slept 3, lint slept 2, Claude took 5. Wall-clock = <strong>max</strong>, not sum. Same trick in GitHub Actions — jobs without <code>needs:</code> run in parallel. Adding Claude to your CI costs zero minutes if your slowest existing job is already slower than Claude.
+    </blockquote>
+    <h4>Optional — show the GHA equivalent</h4>
+<pre>cat ~/session-13-lab/.github/workflows/04-parallel-ci.yml</pre>
+    <p class="audience">Same three-way parallelism, in GitHub Actions syntax.</p>
+  </div>
+</section>
+
+<!-- Module 5 -->
+<section class="module">
+  <header>
+    <span class="num">05 / 05</span>
+    <h3>Monitoring background agents</h3>
+    <p class="syllabus">Monitoring background agent activity via <code>/stats</code> and log streaming — know what Claude is doing in unattended runs.</p>
+  </header>
+  <div class="content">
+    <h4>Type — writes audit log</h4>
+<pre>claude -p --output-format stream-json --verbose "count files in current dir" &gt; /tmp/log</pre>
+    <h4>See what Claude did</h4>
+<pre>jq -r '.message.content[]? | select(.type=="tool_use") | .name' /tmp/log</pre>
+    <h4>See what it cost</h4>
+<pre>jq -r 'select(.type=="result") | .total_cost_usd' /tmp/log</pre>
+    <h4>Audience sees</h4>
+    <ul class="audience">
+      <li>List of tool names Claude used (<code>Bash</code>, <code>Read</code>, <code>Grep</code>, etc.)</li>
+      <li>Dollar amount (e.g. <code>0.0281</code>)</li>
+    </ul>
+    <blockquote class="pitch">
+      When you fire Claude in CI, you are not watching. This is how you know what it did after the fact — every tool call logged, every dollar accounted for. Same shape as <code>/stats</code> inside interactive Claude, just readable by scripts.
+    </blockquote>
+  </div>
+</section>
+
+<!-- Recovery -->
+<div class="recovery">
+  <h2>Recovery cheat sheet</h2>
+  <table>
+    <thead><tr><th>Failure</th><th>What to say</th></tr></thead>
+    <tbody>
+      <tr><td>Claude call hangs</td><td>"API's slow today, moving on" — Ctrl-C, skip</td></tr>
+      <tr><td>jq errors on output</td><td>Show raw output with <code>cat</code>, narrate what should have parsed</td></tr>
+      <tr><td>Hook does not block commit</td><td>Check <code>chmod +x .git/hooks/pre-commit</code> was run</td></tr>
+      <tr><td>Everything breaks</td><td>Open this file, walk audience through it as documentation</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Preflight -->
+<div class="preflight">
+  <h2>Pre-flight (30 s before session)</h2>
+  <p class="audience" style="margin:0 0 10px;">Warm the CLI so first live call is fast:</p>
+<pre>claude -p "hi" &gt; /dev/null</pre>
+</div>
+
+</div>
+
+<script>
+  var btn = document.getElementById('themeToggle');
+  btn.addEventListener('click', function () {
+    var root = document.documentElement;
+    var cur = root.getAttribute('data-theme') || 'light';
+    var next = cur === 'light' ? 'dark' : 'light';
+    root.setAttribute('data-theme', next);
+    btn.textContent = next === 'dark' ? '☀ Theme' : '☾ Theme';
+  });
+</script>
+</body>
+</html>
