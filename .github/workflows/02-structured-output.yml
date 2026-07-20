@@ -20,7 +20,7 @@ jobs:
 
       - name: Run + parse envelope
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: |
           claude -p --output-format json \
             "list top-level dirs in this repo, one per line" \
@@ -29,7 +29,7 @@ jobs:
 
       - name: Cost accounting
         run: |
-          cost=$(jq -r '.totalCost // 0' claude-envelope.json)
+          cost=$(jq -r '.total_cost_usd // 0' claude-envelope.json)
           echo "cost=\$$cost" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload envelope

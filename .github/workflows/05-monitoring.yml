@@ -22,21 +22,21 @@ jobs:
 
       - name: Run audit (stream-json)
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: |
-          claude -p --output-format stream-json \
+          claude -p --output-format stream-json --verbose \
             "Audit every module in this repo — for each, verify the scripts still work and README matches. JSON findings per module." \
             > audit.log
 
       - name: Cost roll-up
         run: |
-          cost=$(jq -r 'select(.type=="result") | .totalCost' audit.log \
+          cost=$(jq -r 'select(.type=="result") | .total_cost_usd' audit.log \
                  | awk '{s+=$1} END {printf "%.4f", s}')
           echo "## Audit cost" >> "$GITHUB_STEP_SUMMARY"
           echo "**\$$cost**" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "## Tool calls" >> "$GITHUB_STEP_SUMMARY"
-          jq -r 'select(.type=="tool_use") | "- `\(.name)` \(.input.file_path // "")"' audit.log \
+          jq -r '.message.content[]? | select(.type=="tool_use") | "- `\(.name)` \(.input.file_path // .input.command // "")"' audit.log \
             >> "$GITHUB_STEP_SUMMARY" || true
 
       - name: Upload audit log
