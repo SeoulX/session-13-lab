@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 2 }
+        with: { fetch-depth: 0 }   # need origin/<base_ref> for the diff
 
       - name: Install Claude
         run: |
@@ -36,7 +36,7 @@ jobs:
 
       - name: Review diff
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         continue-on-error: true    # soft-fail during rollout
         run: |
           diff=$(git diff origin/${{ github.base_ref }}..HEAD -- '*.py' '*.ts' '*.tsx' '*.go' '*.js' 2>/dev/null || true)

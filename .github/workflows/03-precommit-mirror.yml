@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2  # need base to diff against
+          fetch-depth: 0  # full history so origin/<base_ref> is resolvable
 
       - name: Install Claude
         run: |
@@ -22,7 +22,7 @@ jobs:
 
       - name: Leak check (hard-fail)
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: |
           diff=$(git diff origin/${{ github.base_ref }}..HEAD)
           [ -z "$diff" ] && { echo "empty diff"; exit 0; }
@@ -38,7 +38,7 @@ jobs:
         if: contains(github.event.pull_request.changed_files, 'devops/')
         continue-on-error: true
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: |
           claude -p --output-format json \
             "Run pulse-align compliance for this repo. Reply {\"compliant\": true|false, \"gaps\": []}" \
