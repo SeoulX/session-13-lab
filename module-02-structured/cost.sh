@@ -3,5 +3,5 @@
 set -e
 : "${1:?usage: $0 <path-to-stream-json-log>}"
 
-jq -r 'select(.type == "result") | .totalCost' "$1" \
+jq -r 'select(.type == "result") | .total_cost_usd // .totalCost // 0' "$1" \
   | awk '{s+=$1} END {printf "total cost: $%.4f\n", s}'

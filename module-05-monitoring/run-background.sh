@@ -3,7 +3,7 @@
 set -e
 
 log=/tmp/claude-audit.log
-nohup claude -p --output-format stream-json \
+nohup claude -p --output-format stream-json --verbose \
   "list every .md file in this repo w/ its first heading" \
   > "$log" 2>&1 &
 

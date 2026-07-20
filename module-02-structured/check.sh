@@ -3,5 +3,5 @@
 set -e
 : "${1:?usage: $0 <path-to-stream-json-log>}"
 
-jq -r 'select(.type == "tool_use") | .input.file_path // empty' "$1" \
+jq -r '.message.content[]? | select(.type == "tool_use") | .input.file_path // .input.path // empty' "$1" \
   | sort -u
