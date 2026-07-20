@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Session 13 · 20-question quiz</title>
+<style>
+:root {
+  --bg: #f5f0e6;
+  --card: #ffffff;
+  --border: #e5dcc9;
+  --ink: #1a1613;
+  --muted: #7a6f5c;
+  --accent: #e8871e;
+  --accent-dim: #f0a830;
+  --logbg: #1a1613;
+  --logtext: #f5a97f;
+  --pill-bg: #fff4e0;
+  --ok: #15803d;
+}
+:root[data-theme="dark"] {
+  --bg: #0d1a20; --card: #14232b; --border: #22343d;
+  --ink: #e6ecef; --muted: #7d95a1;
+  --accent: #5ab4c5; --accent-dim: #2a7f9e;
+  --logbg: #06111a; --logtext: #5ab4c5; --pill-bg: #1a2f3a;
+  --ok: #4ade80;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg: #0d1a20; --card: #14232b; --border: #22343d;
+    --ink: #e6ecef; --muted: #7d95a1;
+    --accent: #5ab4c5; --accent-dim: #2a7f9e;
+    --logbg: #06111a; --logtext: #5ab4c5; --pill-bg: #1a2f3a;
+    --ok: #4ade80;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  padding: 48px 20px 96px;
+}
+.wrap { max-width: 900px; margin: 0 auto; }
+
+header.top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.brand {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.brand strong { color: var(--accent); font-weight: 700; }
+h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 34px;
+  line-height: 1.15;
+  margin: 8px 0 0;
+}
+.theme-toggle {
+  background: var(--card); border: 1px solid var(--border);
+  color: var(--ink); font-family: ui-monospace, Menlo, monospace;
+  font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 8px 14px; cursor: pointer;
+}
+
+.controls {
+  display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;
+}
+.controls button {
+  background: var(--accent); color: var(--card);
+  border: none; padding: 10px 18px; cursor: pointer;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  font-weight: 700;
+}
+.controls button.ghost {
+  background: var(--card); color: var(--ink); border: 1px solid var(--border);
+}
+.controls .score {
+  margin-left: auto; align-self: center;
+  font-family: ui-monospace, Menlo, monospace; font-size: 13px;
+  color: var(--muted);
+}
+.controls .score strong { color: var(--accent); }
+
+.section-label {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent); font-weight: 700;
+  margin: 32px 0 12px;
+  padding: 4px 8px; background: var(--pill-bg);
+  border: 1px solid var(--border); display: inline-block;
+}
+
+.q {
+  background: var(--card); border: 1px solid var(--border);
+  padding: 20px 24px; margin-bottom: 16px;
+}
+.q .num {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); font-weight: 700;
+}
+.q .prompt {
+  font-size: 15px; color: var(--ink); margin: 4px 0 12px; font-weight: 500;
+}
+.q .prompt code {
+  background: var(--pill-bg); padding: 1px 6px; border: 1px solid var(--border);
+  color: var(--accent);
+  font-family: ui-monospace, Menlo, monospace; font-size: 13px;
+}
+.choices { display: flex; flex-direction: column; gap: 6px; }
+.choice {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 8px 12px; border: 1px solid var(--border);
+  background: var(--bg); cursor: pointer;
+  font-size: 14px;
+}
+.choice:hover { border-color: var(--accent); }
+.choice input { margin-top: 3px; accent-color: var(--accent); }
+.choice.correct { border-color: var(--ok); background: color-mix(in oklab, var(--ok) 8%, var(--bg)); }
+.choice.wrong   { border-color: #dc2626; background: color-mix(in oklab, #dc2626 8%, var(--bg)); }
+.choice code {
+  background: transparent; color: var(--accent);
+  font-family: ui-monospace, Menlo, monospace; font-size: 13px;
+}
+
+.short input {
+  width: 100%; padding: 10px 12px; border: 1px solid var(--border);
+  background: var(--bg); color: var(--ink);
+  font-family: ui-monospace, Menlo, monospace; font-size: 14px;
+}
+.short input:focus { outline: none; border-color: var(--accent); }
+
+.explanation {
+  margin-top: 12px; padding: 12px 16px;
+  background: var(--bg); border-left: 3px solid var(--accent);
+  font-size: 13px; color: var(--ink);
+  display: none;
+}
+.explanation::before {
+  content: "WHY";
+  display: block;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 10px; letter-spacing: 0.16em; color: var(--accent);
+  font-weight: 700; margin-bottom: 6px;
+}
+.explanation.show { display: block; }
+.explanation code {
+  background: var(--pill-bg); padding: 1px 5px; border: 1px solid var(--border);
+  color: var(--accent);
+  font-family: ui-monospace, Menlo, monospace; font-size: 12px;
+}
+
+@media print {
+  body { background: #fff; padding: 0; }
+  .theme-toggle, .controls { display: none; }
+  .q, header.top { break-inside: avoid; border-color: #ccc; }
+  .explanation { display: block !important; }
+}
+@media (max-width: 640px) {
+  body { padding: 24px 12px; }
+  header.top { flex-direction: column; align-items: flex-start; }
+  h1 { font-size: 26px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div>
+    <div class="brand">Seven-Gen · <strong>Session 13</strong> · Assessment</div>
+    <h1>20-question quiz</h1>
+  </div>
+  <button class="theme-toggle" id="themeToggle" type="button">☾ Theme</button>
+</header>
+
+<div class="controls">
+  <button id="grade" type="button">Grade quiz</button>
+  <button class="ghost" id="showAll" type="button">Show all explanations</button>
+  <button class="ghost" id="reset" type="button">Reset</button>
+  <div class="score" id="score">0 / 20 answered</div>
+</div>
+
+<div class="section-label">Module 01–02 · Primitives</div>
+
+<div class="q" data-answer="b">
+  <div class="num">Q1</div>
+  <div class="prompt">Which flag makes <code>claude</code> run non-interactively, exiting after one prompt?</div>
+  <div class="choices">
+    <label class="choice"><input type="radio" name="q1" value="a"><span><code>--headless</code></span></label>
+    <label class="choice"><input type="radio" name="q1" value="b"><span><code>-p</code></span></label>
+    <label class="choice"><input type="radio" name="q1" value="c"><span><code>--run</code></span></label>
+    <label class="choice"><input type="radio" name="q1" value="d"><span><code>--noninteractive</code></span></label>
+  </div>
+  <div class="explanation">
+    Shorthand for <code>--print</code>. Runs one prompt, prints result to stdout, exits. The other options do not exist.
+  </div>
+</div>
+
+<div class="q short" data-answer="0">
+  <div class="num">Q2</div>
+  <div class="prompt">What exit code means the CLI call ran successfully?</div>
+  <input type="text" placeholder="Your answer" />
+  <div class="explanation">
+    POSIX convention. Any non-zero code = failure. Lets <code>if claude -p "..."; then ...</code> work in shell scripts and CI stages.
+  </div>
+</div>
+
+<div class="q short" data-answer="json, stream-json">
+  <div class="num">Q3</div>
+  <div class="prompt">Which two output formats does <code>--output-format</code> accept for programmatic use?</div>
+  <input type="text" placeholder="Two formats, comma-separated" />
+  <div class="explanation">
+    <code>json</code> = single envelope after the run (best for one-shot). <code>stream-json</code> = one event per line as Claude works (best for live monitoring + long agent runs).
+  </div>
+</div>
+
+<div class="q" data-answer="b">
+  <div class="num">Q4</div>
+  <div class="prompt">In <code>--output-format json</code>, which field carries the answer text?</div>
+  <div class="choices">
+    <label class="choice"><input type="radio" name="q4" value="a"><span><code>.output</code></span></label>
+    <label class="choice"><input type="radio" name="q4" value="b"><span><code>.result</code></span></label>
+    <label class="choice"><input type="radio" name="q4" value="c"><span><code>.text</code></span></label>
+    <label class="choice"><input type="radio" name="q4" value="d"><span><code>.message</code></span></label>
+  </div>
+  <div class="explanation">
+    Envelope also carries <code>.sessionId</code>, <code>.total_cost_usd</code>, <code>.numTurns</code>. Use <code>jq -r '.result'</code> to fish out just the answer.
+  </div>
+</div>
+
+<div class="q short" data-answer="--verbose">
+  <div class="num">Q5</div>
+  <div class="prompt">Which extra flag does <code>--output-format stream-json</code> require in CLI 2.1+?</div>
+  <input type="text" placeholder="Your answer" />
+  <div class="explanation">
+    CLI 2.1.215 requires <code>--verbose</code> whenever <code>stream-json</code> is used. Without it the command errors and exits non-zero — silent breakage in scripts written for older CLI versions.
+  </div>
+</div>
+
+<div class="q short" data-answer="~/.claude, CLAUDE.md">
+  <div class="num">Q6</div>
+  <div class="prompt">Name two things that DO carry into a <code>claude -p</code> call from your interactive environment.</div>
+  <input type="text" placeholder="Two items, comma-separated" />
+  <div class="explanation">
+    <code>~/.claude</code> settings + project <code>CLAUDE.md</code>. Also allowed-tools list, MCP server config. Does NOT carry: prior conversation, plan-mode state, session todo list. Every <code>-p</code> call is fresh.
+  </div>
+</div>
+
+<div class="section-label">Module 03 · Hooks</div>
+
+<div class="q short" data-answer=".git/hooks/pre-commit">
+  <div class="num">Q7</div>
+  <div class="prompt">Which file must a git pre-commit hook live at?</div>
+  <input type="text" placeholder="Exact path" />
+  <div class="explanation">
+    No extension. Must be executable (<code>chmod +x</code>). Per-repo. For global: set <code>core.hooksPath</code> in git config.
+  </div>
+</div>
+
+<div class="q short" data-answer="--no-verify">
+  <div class="num">Q8</div>
+  <div class="prompt">What CLI flag lets a developer bypass a failing pre-commit hook?</div>
+  <input type="text" placeholder="Your answer" />
+  <div class="explanation">
+    Also <code>-n</code>. Bypasses pre-commit + commit-msg hooks. Reason M03's GHA mirror exists — CI runs the same check server-side.
+  </div>
+</div>
+
+<div class="q short" data-answer="silently skipped">
+  <div class="num">Q9</div>
+  <div class="prompt">If the pre-commit hook is <code>chmod 644</code> instead of <code>755</code>, what happens on commit?</div>
+  <input type="text" placeholder="Your answer" />
+  <div class="explanation">
+    Git ignores non-executable hook files without warning. Classic footgun — leak-check appears "installed" but never runs. Always verify with <code>ls -la .git/hooks/pre-commit</code>.
+  </div>
+</div>
+
+<div class="section-label">Module 04 · Parallel CI</div>
+
+<div class="q" data-answer="b">
+  <div class="num">Q10</div>
+  <div class="prompt">In GitHub Actions, what makes two <code>jobs:</code> run in parallel?</div>
+  <div class="choices">
+    <label class="choice"><input type="radio" name="q10" value="a"><span><code>parallel: true</code></span></label>
+    <label class="choice"><input type="radio" name="q10" value="b"><span>Absence of <code>needs:</code> between them</span></label>
+    <label class="choice"><input type="radio" name="q10" value="c"><span><code>runs-on: parallel</code></span></label>
+    <label class="choice"><input type="radio" name="q10" value="d"><span>Nothing — jobs always run sequentially</span></label>
+  </div>
+  <div class="explanation">
+    GHA runs jobs concurrently by default. <code>needs: [job-x]</code> serializes them. Parallelism is the default; sequencing is the exception.
+  </div>
+</div>
+
+<div class="q short" data-answer="20">
+  <div class="num">Q11</div>
+  <div class="prompt">If test takes 15s, lint takes 8s, claude-review takes 20s, and all three run in parallel — what is the total wall clock (seconds)?</div>
+  <input type="text" placeholder="Seconds" />
+  <div class="explanation">
+    Wall clock = max(15, 8, 20) = 20. Sum would be 43. Claude joins CI at ZERO added minutes if your slowest existing job is already slower than Claude.
+  </div>
+</div>
+
+<div class="q short" data-answer="actions/github-script">
+  <div class="num">Q12</div>
+  <div class="prompt">Which action posts Claude's findings as a PR comment in <code>04-parallel-ci.yml</code>?</div>
+  <input type="text" placeholder="Action name (org/name)" />
+  <div class="explanation">
+    <code>actions/github-script@v7</code>. Runs a Node script w/ the GitHub API client pre-injected. Cheaper than a full custom action; no auth setup needed.
+  </div>
+</div>
+
+<div class="q short" data-answer="soft-fail during rollout">
+  <div class="num">Q13</div>
+  <div class="prompt"><code>continue-on-error: true</code> is used during rollout of the Claude review job. Why?</div>
+  <input type="text" placeholder="One phrase" />
+  <div class="explanation">
+    Claude can flag noise on unfamiliar codebases. Soft-fail shows findings without blocking merges. Flip to hard-fail once false-positive rate is understood. Same rollout pattern devops uses for any new lint rule.
+  </div>
+</div>
+
+<div class="section-label">Module 05 · Monitoring</div>
+
+<div class="q short" data-answer="total_cost_usd">
+  <div class="num">Q14</div>
+  <div class="prompt">What is the correct JSON field name for cost in a stream-json <code>result</code> event?</div>
+  <input type="text" placeholder="Exact field name" />
+  <div class="explanation">
+    Common bug: code written as <code>.totalCost</code> (camelCase) reads null → sums to $0.0000. Real field is snake_case.
+  </div>
+</div>
+
+<div class="q" data-answer="b">
+  <div class="num">Q15</div>
+  <div class="prompt">Where do you find <code>tool_use</code> events inside a stream-json line?</div>
+  <div class="choices">
+    <label class="choice"><input type="radio" name="q15" value="a"><span>Top-level <code>.type=="tool_use"</code></span></label>
+    <label class="choice"><input type="radio" name="q15" value="b"><span><code>.message.content[]</code></span></label>
+    <label class="choice"><input type="radio" name="q15" value="c"><span><code>.tools[]</code></span></label>
+    <label class="choice"><input type="radio" name="q15" value="d"><span><code>.events[]</code></span></label>
+  </div>
+  <div class="explanation">
+    <code>tool_use</code> events nest INSIDE assistant messages. Correct jq: <code>jq -r '.message.content[]? | select(.type=="tool_use") | .name'</code>. Top-level <code>.type</code> is <code>"assistant"</code>, <code>"user"</code>, <code>"result"</code>.
+  </div>
+</div>
+
+<div class="section-label">GHA · Live demo</div>
+
+<div class="q short" data-answer="CLAUDE_CODE_OAUTH_TOKEN">
+  <div class="num">Q16</div>
+  <div class="prompt">Which repo secret authenticates the Anthropic GitHub App's workflows?</div>
+  <input type="text" placeholder="Exact secret name" />
+  <div class="explanation">
+    Created by <code>/install-github-app</code> in Claude Code CLI. Encrypts an OAuth token tied to installer's Anthropic account (Pro sub works). Usage counts against installer's plan — no API-key billing on the repo.
+  </div>
+</div>
+
+<div class="q short" data-answer="default branch">
+  <div class="num">Q17</div>
+  <div class="prompt">Why does the <code>@claude</code> mention workflow run from the default branch even when commented on a PR from another branch?</div>
+  <input type="text" placeholder="One phrase" />
+  <div class="explanation">
+    <code>issue_comment</code> events always trigger workflows from the repo's default-branch state. Design decision — prevents unmerged PRs from executing arbitrary workflow code via a comment. Consequence: <code>claude.yml</code> MUST live on <code>main</code>.
+  </div>
+</div>
+
+<div class="q short" data-answer="0">
+  <div class="num">Q18</div>
+  <div class="prompt"><code>git diff origin/main..HEAD</code> fails with "unknown revision" when checkout uses <code>fetch-depth: 2</code>. What value fixes it?</div>
+  <input type="text" placeholder="Number" />
+  <div class="explanation">
+    <code>fetch-depth: 2</code> grabs commits but does NOT populate <code>refs/remotes/origin/&lt;base_ref&gt;</code>. <code>fetch-depth: 0</code> = full history, base ref present.
+  </div>
+</div>
+
+<div class="section-label">Pulse · applied arc</div>
+
+<div class="q short" data-answer="preserves history">
+  <div class="num">Q19</div>
+  <div class="prompt">Pulse's tag lifecycle now cuts a NEW tag on every submit instead of destructively re-cutting <code>v0.0.0</code>. Name one reason this matters.</div>
+  <input type="text" placeholder="One sentence" />
+  <div class="explanation">
+    Preserves Bitbucket tag history + Jenkins build lineage. Old behavior deleted <code>v0.0.0</code> and re-pushed → history gone, Jenkins build numbers collided. New behavior: every attempt keeps its own tracker URL forever.
+  </div>
+</div>
+
+<div class="q short" data-answer="exact tag match">
+  <div class="num">Q20</div>
+  <div class="prompt">In the 3-tier spec lookup (<code>/api/deployments/spec/{slug}?tag=X</code>), which tier fires FIRST?</div>
+  <input type="text" placeholder="Your answer" />
+  <div class="explanation">
+    Exact <code>dep.tag == tag</code> match, persisted at push_tag time. Manual Jenkins rerun maps back to original submission with correct cluster + spec. Tier 2 = env fallback, Tier 3 = slug fallback.
+  </div>
+</div>
+
+</div>
+
+<script>
+var btn = document.getElementById('themeToggle');
+btn.addEventListener('click', function () {
+  var root = document.documentElement;
+  var cur = root.getAttribute('data-theme') || 'light';
+  var next = cur === 'light' ? 'dark' : 'light';
+  root.setAttribute('data-theme', next);
+  btn.textContent = next === 'dark' ? '☀ Theme' : '☾ Theme';
+});
+
+var qs = Array.prototype.slice.call(document.querySelectorAll('.q'));
+var score = document.getElementById('score');
+
+function normalize(s) {
+  return (s || '').toLowerCase().trim().replace(/\s+/g, ' ');
+}
+
+function getValue(q) {
+  var input = q.querySelector('input[type="text"]');
+  if (input) return input.value;
+  var radio = q.querySelector('input[type="radio"]:checked');
+  return radio ? radio.value : '';
+}
+
+function updateAnswered() {
+  var n = qs.filter(function (q) { return getValue(q).length > 0; }).length;
+  score.innerHTML = '<strong>' + n + '</strong> / 20 answered';
+}
+
+document.getElementById('grade').addEventListener('click', function () {
+  var right = 0;
+  qs.forEach(function (q) {
+    var answer = q.dataset.answer.toLowerCase();
+    var val = normalize(getValue(q));
+    var ok = false;
+    if (q.querySelector('input[type="radio"]')) {
+      ok = val === answer;
+      q.querySelectorAll('.choice').forEach(function (c) {
+        c.classList.remove('correct', 'wrong');
+        var v = c.querySelector('input').value;
+        if (v === answer) c.classList.add('correct');
+        else if (v === val && v !== answer) c.classList.add('wrong');
+      });
+    } else {
+      // short answer — accept substring / any comma-separated piece
+      var parts = answer.split(',').map(function (p) { return p.trim(); });
+      ok = parts.some(function (p) { return val.indexOf(p) !== -1; }) || val === answer;
+      var input = q.querySelector('input[type="text"]');
+      input.style.borderColor = ok ? 'var(--ok)' : '#dc2626';
+    }
+    if (ok) right++;
+    q.querySelector('.explanation').classList.add('show');
+  });
+  score.innerHTML = '<strong>' + right + '</strong> / 20 correct';
+});
+
+document.getElementById('showAll').addEventListener('click', function () {
+  qs.forEach(function (q) { q.querySelector('.explanation').classList.add('show'); });
+});
+
+document.getElementById('reset').addEventListener('click', function () {
+  qs.forEach(function (q) {
+    q.querySelectorAll('input').forEach(function (i) {
+      if (i.type === 'radio') i.checked = false;
+      else i.value = '';
+      i.style.borderColor = '';
+    });
+    q.querySelectorAll('.choice').forEach(function (c) {
+      c.classList.remove('correct', 'wrong');
+    });
+    q.querySelector('.explanation').classList.remove('show');
+  });
+  updateAnswered();
+});
+
+document.addEventListener('input', updateAnswered);
+document.addEventListener('change', updateAnswered);
+updateAnswered();
+</script>
+</body>
+</html>
