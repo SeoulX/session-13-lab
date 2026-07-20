@@ -8,17 +8,15 @@ Add a Claude review job that runs in parallel with your existing test + lint pip
 | Where | Syntax | How it parallelizes |
 |---|---|---|
 | **Local shell (demo today)** | bash `&` background jobs + `wait` | Kernel schedules 3 processes concurrently |
-| **GitHub Actions (canonical)** | separate `jobs:` without `needs:` | GHA scheduler dispatches 3 runners concurrently |
-| **Jenkins (Pulse pipeline)** | `parallel { }` block | Jenkins agent forks 3 pipeline branches |
+| **GitHub Actions (canonical CI)** | separate `jobs:` without `needs:` | GHA scheduler dispatches 3 runners concurrently |
 
-Same idea, different venue.
+Same primitive, different scheduler.
 
 ## Files
 - `parallel-local.sh` — **runs live** in the session. Fires test + lint + claude-review in parallel via bash `&`. Total wall-clock = max(job).
 - `demo-buggy-diff.sh` — seeds a `buggy.py` w/ real defects so Claude has something to actually flag.
 - `.github/workflows/04-parallel-ci.yml` (at repo root) — reference workflow. Same behavior in GHA; needs `ANTHROPIC_API_KEY`.
-- `claude-review.sh` — the review-only step (called by both local + Jenkins snippet).
-- `Jenkinsfile.snippet` — Jenkins version for reference; drop into a `Jenkinsfile.default` if using Jenkins CI.
+- `claude-review.sh` — the review-only step, callable standalone.
 
 ## Live demo (60 seconds)
 
@@ -37,4 +35,3 @@ Point at the wall-clock number vs sum-of-individual — that's the parallelism w
 - `sleep 3` + `sleep 2` are stand-ins for real test / lint. Wire your actual commands in `parallel-local.sh` job blocks 1 + 2.
 - Claude call uses `--append-system-prompt` to enforce JSON-only reply. Prose-mixed responses would break `jq`.
 - GHA workflow is functionally identical + auto-comments findings on the PR via `actions/github-script`. Activate when your org sets `ANTHROPIC_API_KEY`.
-- Same trick works inside Pulse's `Jenkinsfile.default` — Module 06 walks the Jenkins case study.

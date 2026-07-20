@@ -103,7 +103,7 @@ time { (sleep 3 && echo "test done") & (sleep 2 && echo "lint done") & (claude -
 - `real 5.something` at the end (not 10)
 
 ### Pitch
-> "Test slept 3, lint slept 2, Claude took 5. Wall-clock = **max**, not sum. Same trick in GitHub Actions — jobs without `needs:` run in parallel. Same trick in Jenkins — `parallel { }` block. Adding Claude to your CI costs zero minutes if your slowest existing job is already slower than Claude."
+> "Test slept 3, lint slept 2, Claude took 5. Wall-clock = **max**, not sum. Same trick in GitHub Actions — jobs without `needs:` run in parallel. Adding Claude to your CI costs zero minutes if your slowest existing job is already slower than Claude."
 
 ### Optional — show the GHA equivalent
 ```bash
